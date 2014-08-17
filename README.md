@@ -1,4 +1,4 @@
-# GAOWL
+# GAOWL (under development)
 
 a [Sails](http://sailsjs.org) application demo built with my gulp generators, waterlock and waterlock local auth.
 
