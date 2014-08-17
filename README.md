@@ -4,6 +4,8 @@ a [Sails](http://sailsjs.org) application demo built with my gulp generators, wa
 
 ### Install
 
+Currently this app works with databases, but not with sails-disk. Looking into the issue...
+
 To use this demo do the following:
 
 ```sh
