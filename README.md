@@ -16,7 +16,7 @@ Then go to the node_modules folder and change  waterlock-local-auth/lib/controll
 var bcrypt = require('bcrypt'); => var bcrypt = require('bcryptjs');
 ```
 
-now you can do a ```sh sails lift ```
+now you can do a ``` sails lift ```
 
 The app will automatically download the bower packages for you and add them to the assets folder (courtesy of sails-generator-bower-gulp).
 
