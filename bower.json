@@ -1,0 +1,18 @@
+{
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "~3.2.0",
+    "bootstrapValidator": "~0.5.0",
+    "underscore": "~1.6.0"
+  },
+  "name": "GAOW",
+  "version": "0.0.0",
+  "author": "anonymous node/sails user",
+  "private": true
+}

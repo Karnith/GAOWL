@@ -1,0 +1,7 @@
+{
+  "generators": {
+    "modules": {
+		"bower": "sails-generate-bower-gulp"
+	}
+  }
+}
