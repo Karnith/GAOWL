@@ -31,7 +31,7 @@
     "rc": "~0.5.0",
     "run-sequence": "^0.3.6",
     "sails": "~0.10.4",
-    "sails-disk": "~0.10.0",
+    "sails-disk": "~0.10.3",
     "sails-mongo": "^0.10.4",
     "waterlock": "0.0.12",
     "waterlock-local-auth": "0.0.5"

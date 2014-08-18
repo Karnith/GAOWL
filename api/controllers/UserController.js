@@ -73,16 +73,19 @@ module.exports = require('waterlock').actions.user({
                 req.session.User = user;
 
                 user.online = true;
+                req.session.authenticated = true;
                 user.save(function(err, user) {
                     if (err) return next(err);
 
                     user.action = " signed-up and logged-in.";
-                    waterlock.engine.attachAuthToUser(auth, user, function (err, ua) {
+                    waterlock.engine.attachAuthToUser(auth, user, function (err) {
                         if (err) {
                             res.json(err);
                         }
                         else {
-                            waterlock.cycle.loginSuccess(req, res, ua);
+                            waterlock.cycle.loginSuccess(req, res, user);
+                            //sails.log.warn(ua);
+                            //sails.log.error(req.session);
                             return res.redirect('/user/show/'+user.id);
                         }
                     });
@@ -91,7 +94,8 @@ module.exports = require('waterlock').actions.user({
     },
 
     show: function(req, res, next) {
-        User.findOne(req.param('id'), function foundUser(err, user) {
+        var params = waterlock._utils.allParams(req);
+        User.findOne(params.id, function foundUser(err, user) {
             if (err) return next(err);
             if (!user) return next();
             res.view({
@@ -146,6 +150,7 @@ module.exports = require('waterlock').actions.user({
 
         User.update(params.id, userObj, function userUpdated (err) {
             if (err) {
+                sails.log.error(err);
                 return res.redirect('/user/edit/' + params.id);
             }
 
