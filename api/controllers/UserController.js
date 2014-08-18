@@ -84,8 +84,6 @@ module.exports = require('waterlock').actions.user({
                         }
                         else {
                             waterlock.cycle.loginSuccess(req, res, user);
-                            //sails.log.warn(ua);
-                            //sails.log.error(req.session);
                             return res.redirect('/user/show/'+user.id);
                         }
                     });
