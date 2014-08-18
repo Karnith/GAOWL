@@ -32,3 +32,5 @@ Mongo has already been configured for localhost with no username and password.
 
 Currently this app works with databases, but not with sails-disk due to a bug in the adapter
 More on this can be found [here](https://github.com/balderdashy/sails-disk/issues/21)
+
+account creation issue for second account, auth not generated...
