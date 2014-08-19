@@ -36,11 +36,11 @@
     "waterlock": "0.0.12",
     "waterlock-local-auth": "0.0.5"
   },
-  "name": "GAOW",
+  "name": "GAOWL",
   "private": true,
-  "version": "0.0.0",
-  "description": "a Sails application",
-  "keywords": [],
+  "version": "0.0.4",
+  "description": "a Sails application using gulp generators, waterlock and waterlock-local-auth ",
+  "keywords": [gulp, waterlock, sails],
   "scripts": {
     "start": "node app.js",
     "debug": "node debug app.js"
@@ -48,8 +48,8 @@
   "main": "app.js",
   "repository": {
     "type": "git",
-    "url": "git://github.com/anonymous node/sails user/GAOW.git"
+    "url": "git://github.com/Karnith/GAOWL.git"
   },
-  "author": "anonymous node/sails user",
-  "license": ""
+  "author": "Karnith / JCMar",
+  "license": "MIT"
 }

@@ -44,7 +44,7 @@ module.exports.waterlock = {
           vars:{}
         }
       },
-      createOnNotFound: false
+      createOnNotFound: true
     }
   ],
 
@@ -82,6 +82,7 @@ module.exports.waterlock = {
       // string - 'custom json response string'
       // default - 'default'
       success: 'default',
+      //success: {controller: 'user', action: 'create'},
 
       // This can be any one of the following
       // 

@@ -1,14 +1,13 @@
-<form action="/user/create" method="POST" id="sign-up-form" class="form-signin" id="sign-up-form">
-  <h2 class="form-signin-heading">Create an account</h2>
-
-  <% if(flash && flash.err) { %>
-  <ul class="alert alert-success">
+<% if(flash && flash.err) { %>
+<ul class="alert alert-success">
     <% Object.keys(flash.err).forEach(function(error) { %>
     <li><%- JSON.stringify(flash.err[error]) %></li>
     <% }) %>
-  </ul>
-  <% } %>
+</ul>
+<% } %>
 
+<form action="/user/create" method="POST" id="sign-up-form" class="form-signin" id="sign-up-form">
+  <h2 class="form-signin-heading">Create an account</h2>
 
   <div class="control-group form-group">
     <input type="text" class="form-control" placeholder="your name" name="name">

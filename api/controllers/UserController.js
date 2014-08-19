@@ -14,51 +14,15 @@ module.exports = require('waterlock').actions.user({
     },
 
     create: function(req, res, next) {
-        var params = waterlock._utils.allParams(req),
-            auth = {
-                email: params.email,
-                password: params.password
+        var auth = {
+                email: req.param('email'),
+                password: req.param('password')
             },
             userObj = {
-                name: params.name,
-                title: params.title,
-                email: params.email
+                name: req.param('name'),
+                title: req.param('title'),
+                email: req.param('email')
             };
-/*            headderParams = [
-                'params.confirmation',
-                'params._csrf',
-                'params.host',
-                'params.connection',
-                'params.content-length',
-                'params.cache-control',
-                'params.accept',
-                'params.origin',
-                'params.user-agent',
-                'params.content-type',
-                'params.referer',
-                'params.accept-encoding',
-                'params.accept-language',
-                'params.cookie',
-                'params.email',
-                'params.password'
-            ];
-        delete(params.confirmation);
-        delete(params._csrf);
-        delete(params.host);
-        delete(params.connection);
-        delete(params.content-length);
-        delete(params.cache-control);
-        delete(params.accept);
-        delete(params.origin);
-        delete(params.user-agent);
-        delete(params.content-type);
-        delete(params.referer);
-        delete(params.accept-encoding);
-        delete(params.accept-language);
-        delete(params.cookie);
-        delete(params.email);
-        delete(params.password);
-*/
 
         User.create(userObj)
             .exec(function (err, user){
@@ -70,20 +34,26 @@ module.exports = require('waterlock').actions.user({
 
                     return res.redirect('/user/new');
                 }
-                req.session.User = user;
+                req.session.user = user;
 
                 user.online = true;
                 req.session.authenticated = true;
                 user.save(function(err, user) {
-                    if (err) return next(err);
+                    if(err) {
+                        sails.log.error(err);
+                        return next(err);
+                    }
 
                     user.action = " signed-up and logged-in.";
+
+                    User.publishCreate(user);
                     waterlock.engine.attachAuthToUser(auth, user, function (err) {
                         if (err) {
+                            sails.log.error(err);
                             res.json(err);
                         }
                         else {
-                            waterlock.cycle.loginSuccess(req, res, user);
+                            waterlock.logger.debug('user login success');
                             return res.redirect('/user/show/'+user.id);
                         }
                     });
@@ -92,8 +62,7 @@ module.exports = require('waterlock').actions.user({
     },
 
     show: function(req, res, next) {
-        var params = waterlock._utils.allParams(req);
-        User.findOne(params.id, function foundUser(err, user) {
+        User.findOne(req.param('id'), function foundUser(err, user) {
             if (err) return next(err);
             if (!user) return next();
             res.view({
@@ -112,8 +81,7 @@ module.exports = require('waterlock').actions.user({
     },
 
     edit: function(req, res, next) {
-        var params = waterlock._utils.allParams(req);
-        User.findOne(params.id, function foundUser(err, user) {
+        User.findOne(req.param('id'), function foundUser(err, user) {
             if (err) return next(err);
             if (!user) return next();
 
@@ -124,17 +92,21 @@ module.exports = require('waterlock').actions.user({
     },
 
     update: function(req, res, next) {
-        var params = waterlock._utils.allParams(req),
+        var params = req.params.all(),
             userObj = {
-            name: params.name,
-            title: params.title,
-            email: params.email
-        };
+                name: params.name,
+                title: params.title,
+                email: params.email
+            },
+            authObj = {
+                email: params.email,
+                password: params.password
+            };
 
-        if (req.session.User.admin) {
+        if (req.session.user.admin) {
             // Changed this logic to here. I prefer to send clean stuff to models
             var admin = false;
-            var adminParam = params.admin;
+            var adminParam = req.param('admin');
 
             if (typeof adminParam !== 'undefined') {
                 if (adminParam === 'unchecked') {
@@ -146,23 +118,33 @@ module.exports = require('waterlock').actions.user({
             userObj.admin = admin;
         }
 
-        User.update(params.id, userObj, function userUpdated (err) {
+        User.update(params.id, userObj).exec(function(err) {
             if (err) {
                 sails.log.error(err);
                 return res.redirect('/user/edit/' + params.id);
             }
 
-            res.redirect('/user/show/' + params.id);
+            if(!authObj.password || authObj.password === 'undefined') {
+                delete (authObj.password);
+            }
+
+            Auth.update({user: req.session.user.id}, authObj).exec( function(err){
+                if(err){
+                    sails.log.error(err);
+                    return res.redirect('/user/edit/' + params.id);
+                }
+                req.session.user.email = params.email;
+                res.redirect('/user/show/' + params.id);
+            });
         });
     },
 
     destroy: function(req, res, next) {
-        var params = waterlock._utils.allParams(req);
-        User.findOne(params.id, function foundUser(err, user) {
+        User.findOne(req.param('id'), function foundUser(err, user) {
             if (err) return next(err);
             if (!user) return next('User doesn\'t exist.');
 
-            User.destroy(params.id, function userDestroyed(err) {
+            User.destroy(req.param('id'), function userDestroyed(err) {
                 if (err) return next(err);
 
                 User.publishUpdate(user.id, {

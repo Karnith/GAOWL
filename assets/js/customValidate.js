@@ -1,5 +1,5 @@
 $(document).ready(function() {
-  $('#sign-up-form').bootstrapValidator({
+  $('#sign-up-form, #user-edit-form').bootstrapValidator({
       excluded: [':disabled', ':hidden', ':not(:visible)'],
       feedbackIcons: {
           valid: 'glyphicon glyphicon-ok',
