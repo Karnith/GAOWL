@@ -74,7 +74,7 @@ module.exports.session = {
   //host: 'localhost',
   //port: 27017,
   url: process.env.DB_URL,
-  db: 'GAOW',
+  db: 'GAOWL',
   collection: 'sessions'//,
 
   /***************************************************************************
