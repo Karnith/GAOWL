@@ -42,7 +42,7 @@ More on this can be found [here](https://github.com/balderdashy/sails-disk/issue
 [Sails](http://sailsjs.org) is free and open-source under the [MIT License](http://sails.mit-license.org/).
 
 [license-image]: http://img.shields.io/badge/license-MIT-blue.svg?style=flat
-[license-url]: http://github.com/Karnith/GAOWL/master/LICENSE.md
+[license-url]: LICENSE.md
 
 [dependency-image]: https://gemnasium.com/Karnith/GAOWL.svg?style=flat
 [dependency-url]: https://gemnasium.com/Karnith/GAOWL
