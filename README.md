@@ -2,24 +2,6 @@
 
 [![Dependency Status][dependency-image]][dependency-url] [![MIT License][license-image]][license-url]
 
-## License
-
-**[MIT](./LICENSE)**
-&copy; 2014 [Karnith](http://github.com/Karnith)
-
-[Sails](http://sailsjs.org) is free and open-source under the [MIT License](http://sails.mit-license.org/).
-
-[license-image]: http://img.shields.io/badge/license-MIT-blue.svg?style=flat
-[license-url]: LICENSE
-
-[dependency-image]: https://gemnasium.com/Karnith/GOWL.svg?style=flat
-[dependency-url]: https://gemnasium.com/Karnith/GOWL
-
-[coverage-image]: http://img.shields.io/coveralls/Karnith/GOWL/master.svg?style=flat
-[coverage-url]: https://coveralls.io/r/Karnith/GOWL?branch=master
-
-a [Sails](http://sailsjs.org) application demo built with my gulp generators, waterlock and waterlock local auth.
-
 ### Requirements
 
 As for right now, the demo will only work with database adapter. Please use your adapter of choice until the issue in sails-disk is resolved.
@@ -51,4 +33,19 @@ Mongo has already been configured for localhost with no username and password.
 Currently this app works with databases, but not with sails-disk due to a bug in the adapter
 More on this can be found [here](https://github.com/balderdashy/sails-disk/issues/21)
 
-account creation issue for second account, auth not generated...
+
+## License
+
+**[MIT](./LICENSE)**
+&copy; 2014 [Karnith](http://github.com/Karnith)
+
+[Sails](http://sailsjs.org) is free and open-source under the [MIT License](http://sails.mit-license.org/).
+
+[license-image]: http://img.shields.io/badge/license-MIT-blue.svg?style=flat
+[license-url]: LICENSE
+
+[dependency-image]: https://gemnasium.com/Karnith/GOWL.svg?style=flat
+[dependency-url]: https://gemnasium.com/Karnith/GOWL
+
+[coverage-image]: http://img.shields.io/coveralls/Karnith/GOWL/master.svg?style=flat
+[coverage-url]: https://coveralls.io/r/Karnith/GOWL?branch=master
