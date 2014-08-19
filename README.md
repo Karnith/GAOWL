@@ -1,4 +1,22 @@
-# GAOWL (under development)
+# GAOWL
+
+[![Dependency Status][dependency-image]][dependency-url] [![MIT License][license-image]][license-url]
+
+## License
+
+**[MIT](./LICENSE)**
+&copy; 2014 [Karnith](http://github.com/Karnith)
+
+[Sails](http://sailsjs.org) is free and open-source under the [MIT License](http://sails.mit-license.org/).
+
+[license-image]: http://img.shields.io/badge/license-MIT-blue.svg?style=flat
+[license-url]: LICENSE
+
+[dependency-image]: https://gemnasium.com/Karnith/GOWL.svg?style=flat
+[dependency-url]: https://gemnasium.com/Karnith/GOWL
+
+[coverage-image]: http://img.shields.io/coveralls/Karnith/GOWL/master.svg?style=flat
+[coverage-url]: https://coveralls.io/r/Karnith/GOWL?branch=master
 
 a [Sails](http://sailsjs.org) application demo built with my gulp generators, waterlock and waterlock local auth.
 
