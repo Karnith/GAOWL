@@ -33,6 +33,18 @@ Mongo has already been configured for localhost with no username and password.
 Currently this app works with databases, but not with sails-disk due to a bug in the adapter
 More on this can be found [here](https://github.com/balderdashy/sails-disk/issues/21)
 
+As of right now, a change to the waterlock-local-auth engine.js needs to be made.
+In /node_modules/waterlock-local-auth/lib/engine.js change line 143 from
+
+```sh
+self.findOrCreateAuth(null, attributes, cb);
+```
+to
+```sh
+self.findOrCreateAuth(user.id, attributes, cb);
+```
+so user auth creation works properly.
+
 
 ## License
 
