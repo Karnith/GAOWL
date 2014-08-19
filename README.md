@@ -44,8 +44,8 @@ More on this can be found [here](https://github.com/balderdashy/sails-disk/issue
 [license-image]: http://img.shields.io/badge/license-MIT-blue.svg?style=flat
 [license-url]: LICENSE
 
-[dependency-image]: https://gemnasium.com/Karnith/GOWL.svg?style=flat
-[dependency-url]: https://gemnasium.com/Karnith/GOWL
+[dependency-image]: https://gemnasium.com/Karnith/GAOWL.svg?style=flat
+[dependency-url]: https://gemnasium.com/Karnith/GAOWL
 
 [coverage-image]: http://img.shields.io/coveralls/Karnith/GOWL/master.svg?style=flat
 [coverage-url]: https://coveralls.io/r/Karnith/GOWL?branch=master
