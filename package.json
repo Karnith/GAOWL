@@ -31,10 +31,9 @@
     "rc": "~0.5.0",
     "run-sequence": "^0.3.6",
     "sails": "~0.10.4",
-    "sails-disk": "~0.10.3",
     "sails-mongo": "^0.10.4",
-    "waterlock": "0.0.12",
-    "waterlock-local-auth": "0.0.5"
+    "waterlock": "git://github.com/Karnith/waterlock.git",
+    "waterlock-local-auth": "git://github.com/Karnith/waterlock-local-auth.git"
   },
   "name": "GAOWL",
   "private": true,
@@ -51,5 +50,8 @@
     "url": "git://github.com/anonymous node/sails user/GAOW.git"
   },
   "author": "anonymous node/sails user",
-  "license": ""
+  "license": "",
+  "devDependencies": {
+    "sails-disk": "^0.10.3"
+  }
 }

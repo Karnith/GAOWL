@@ -11,9 +11,10 @@ module.exports = {
     },
 
     'create': function(req, res, next) {
-
-        if (!req.param('email') || !req.param('password')) {
-            var usernamePasswordRequiredError = [
+        var params = req.params.all(),
+            usernamePasswordRequiredError;
+        if (!params.email || !params.password) {
+            usernamePasswordRequiredError = [
                 {
                     name: 'usernamePasswordRequired',
                     message: 'You must enter both a username and password.'
@@ -26,16 +27,16 @@ module.exports = {
             return res.redirect('/session/new');
         }
 
-        User.findOneByEmail(req.param('email')).populate('auth').exec(function(err, user){
+        User.findOneByEmail(params.email).populate('auth').exec(function(err, user){
             if(err) {
                 sails.log.error(err);
                 return next(err);
             }
             if (user) {
-                if(bcrypt.compareSync(req.param('password'), user.auth.password)){
+                req.session.user = user;
+                if(bcrypt.compareSync(params.password, user.auth.password)){
 
                     req.session.authenticated = true;
-                    req.session.user = user;
 
                     user.online = true;
                     delete (req.session.user.auth);
@@ -61,11 +62,19 @@ module.exports = {
                         res.redirect('/user/show/' + user.id);
                     });
                 }else{
-                    waterlock.cycle.loginFailure(req, res, user, {error: 'Invalid username or password'});
+                    if(err) {
+                        sails.log.error(err);
+                        return res.redirect('session/new')
+                    }
+                    return res.redirect('session/new');
                 }
             } else {
                 //TODO redirect to register
-                waterlock.cycle.loginFailure(req, res, null, {error: 'user not found'});
+                if(err) {
+                    sails.log.error(err);
+                    return res.redirect('session/new');
+                }
+                return res.redirect('session/new');
             }
         });
     },
@@ -74,29 +83,36 @@ module.exports = {
         User.findOne(req.session.user.id, function foundUsers(err, user) {
             var userId = req.session.user.id;
 
-            if (user) {
+            if(user) {
+                User.unsubscribe(req.socket, userId);
                 User.update(userId, {
-                    online: false
-                }, function(err) {
-                    if (err) return next(err);
+                        online: false
+                    },
+                    function(err) {
+                        if(err) {
+                            sails.log.error(err);
+                            return next(err);
+                        }
 
-                    User.publishUpdate(user.id, {
-                        loggedIn: false,
-                        id: user.id,
-                        name: user.name,
-                        action: ' has logged out.'
-                    });
+                        User.publishUpdate(userId, {
+                            loggedIn: false,
+                            id: user.id,
+                            name: user.name,
+                            action: ' has logged out.'
+                        });
 
                     req.session.destroy();
+
                     waterlock.logger.debug('user logout');
 
-                    res.redirect('/session/new');
+                    res.redirect('/');
                 });
             } else {
                 req.session.destroy();
+                User.unsubscribe(req.socket, userId);
                 waterlock.logger.debug('user logout');
 
-                res.redirect('/session/new');
+                res.redirect('/');
             }
         });
     }

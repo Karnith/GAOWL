@@ -14,14 +14,15 @@ module.exports = require('waterlock').actions.user({
     },
 
     create: function(req, res, next) {
-        var auth = {
-                email: req.param('email'),
-                password: req.param('password')
+        var params = req.params.all(),
+            auth = {
+                email: params.email,
+                password: params.password
             },
             userObj = {
-                name: req.param('name'),
-                title: req.param('title'),
-                email: req.param('email')
+                name: params.name,
+                title: params.title,
+                email: params.email
             };
 
         User.create(userObj)
@@ -43,26 +44,19 @@ module.exports = require('waterlock').actions.user({
                         sails.log.error(err);
                         return next(err);
                     }
-                    //user.action = " signed-up and logged-in.";
+
                     waterlock.engine.attachAuthToUser(auth, user, function (err) {
                         if (err) {
                             sails.log.error(err);
-                            res.json(err);
+                            res.redirect('user/new');
                         }
-                        else {
 
-                            user.action = " signed-up and logged-in.";
+                        user.action = " signed-up and logged-in.";
 
-                            User.publishCreate(user);
+                        User.publishCreate(user);
 
-                            /*User.publishCreate({
-                                id: user.id,
-                                name: user.name,
-                                action: " signed-up and logged-in."
-                            });*/
-                            waterlock.logger.debug('user login success');
-                            return res.redirect('/user/show/'+user.id);
-                        }
+                        waterlock.logger.debug('user login success');
+                        return res.redirect('/user/show/'+user.id);
                     });
                 });
             });
@@ -147,27 +141,37 @@ module.exports = require('waterlock').actions.user({
     },
 
     destroy: function(req, res, next) {
-        User.findOne(req.param('id'), function foundUser(err, user) {
-            if (err) return next(err);
-            if (!user) return next('User doesn\'t exist.');
+        var params = req.params.all();
+        User.unsubscribe(req.socket, params.id);
+        User.findOneById(params.id).exec(function(err, usr) {
+            if(err) {
+                sails.log.error(err);
+                return res.redirect('/user');
+            }
+            if(!usr) {
+                sails.log.error('User doesn\'t exist.');
+                return res.redirect('/user');
+            }
 
-            User.destroy(req.param('id')).exec(function(err) {
+            User.destroy({id: usr.id}).exec(function(err, record) {
                 if(err) {
                     sails.log.error(err);
-                    return next(err);
+                    return res.redirect('/user');
                 }
-
-                Auth.destroy({user: user.id}).exec(function(err){
+                var auth = record.map(function(rId){ return rId.id;});
+                Auth.destroy({user: auth}).exec(function(err, rAuth){
                     if(err) {
                         sails.log.error(err);
-                        return next(err);
+                        return res.redirect('/user');
                     }
-                    User.publishUpdate(user.id, {
-                        name: user.name,
+
+                    User.publishUpdate(usr.id, {
+                        id: usr.id,
+                        name: usr.name,
                         action: ' has been destroyed.'
                     });
 
-                    User.publishDestroy(user.id);
+                    User.publishDestroy(usr.id);
                     res.redirect('/user');
                 });
             });
@@ -183,6 +187,6 @@ module.exports = require('waterlock').actions.user({
             User.subscribe(req.socket, users);
 
             res.send(200);
-        })
+        });
     }
 });
