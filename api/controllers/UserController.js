@@ -151,18 +151,26 @@ module.exports = require('waterlock').actions.user({
             if (err) return next(err);
             if (!user) return next('User doesn\'t exist.');
 
-            User.destroy(req.param('id'), function userDestroyed(err) {
-                if (err) return next(err);
+            User.destroy(req.param('id')).exec(function(err) {
+                if(err) {
+                    sails.log.error(err);
+                    return next(err);
+                }
 
-                User.publishUpdate(user.id, {
-                    name: user.name,
-                    action: ' has been destroyed.'
+                Auth.destroy({user: user.id}).exec(function(err){
+                    if(err) {
+                        sails.log.error(err);
+                        return next(err);
+                    }
+                    User.publishUpdate(user.id, {
+                        name: user.name,
+                        action: ' has been destroyed.'
+                    });
+
+                    User.publishDestroy(user.id);
+                    res.redirect('/user');
                 });
-
-                User.publishDestroy(user.id);
             });
-
-            res.redirect('/user');
         });
     },
 
