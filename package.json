@@ -1,4 +1,18 @@
-{
+"name": "GAOWL",
+  "private": true,
+  "version": "0.0.9",
+  "description": "A demo of gulp, sails v10.4, waterlock",
+  "keywords": [],
+  "scripts": {
+    "start": "node app.js",
+    "debug": "node debug app.js"
+  },
+  "main": "app.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/Karnith/GAOWL.git"
+  },
+ {
   "dependencies": {
     "bcryptjs": "^2.0.2",
     "connect-mongo": "^0.4.1",
@@ -35,22 +49,8 @@
     "waterlock": "git://github.com/Karnith/waterlock.git",
     "waterlock-local-auth": "git://github.com/Karnith/waterlock-local-auth.git"
   },
-  "name": "GAOWL",
-  "private": true,
-  "version": "0.0.0",
-  "description": "a Sails application",
-  "keywords": [],
-  "scripts": {
-    "start": "node app.js",
-    "debug": "node debug app.js"
-  },
-  "main": "app.js",
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/anonymous node/sails user/GAOW.git"
-  },
-  "author": "anonymous node/sails user",
-  "license": "",
+  "author": "Karnith / JCMar",
+  "license": "MIT",
   "devDependencies": {
     "sails-disk": "^0.10.3"
   }
