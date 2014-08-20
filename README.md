@@ -14,12 +14,6 @@ To use this demo do the following:
 npm install
 ```
 
-Then go to the node_modules folder and change  waterlock-local-auth/lib/controllers/actions/login.js to use bcryptjs instead of bcrypt (this is needed as bcrypt has dependencies that have issues compiling on windows)
-
-```
-var bcrypt = require('bcrypt'); => var bcrypt = require('bcryptjs');
-```
-
 now you can do a ``` sails lift ```
 
 The app will automatically download the bower packages for you and add them to the assets folder (courtesy of sails-generator-bower-gulp).
@@ -32,19 +26,6 @@ Mongo has already been configured for localhost with no username and password.
 
 Currently this app works with databases, but not with sails-disk due to a bug in the adapter
 More on this can be found [here](https://github.com/balderdashy/sails-disk/issues/21)
-
-As of right now, a change to the waterlock-local-auth engine.js needs to be made.
-In /node_modules/waterlock-local-auth/lib/engine.js change line 143 from
-
-```sh
-self.findOrCreateAuth(null, attributes, cb);
-```
-to
-```sh
-self.findOrCreateAuth(user.id, attributes, cb);
-```
-so user auth creation works properly.
-
 
 ## License
 
