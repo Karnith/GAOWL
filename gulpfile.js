@@ -14,8 +14,9 @@
 var gulp = require('gulp'),
 	plugins = require('gulp-load-plugins')({
 						pattern: ['gulp-*', 'merge-*', 'run-*', 'main-*'], // the glob to search for
-						replaceString: /.*-/, // what to remove from the name of the module when adding it to the context
-						lazy: true, // whether the plugins should be lazy loaded on demand
+						replaceString: /\bgulp[\-.]|run[\-.]|merge[\-.]|main[\-.]/, // what to remove from the name of the module when adding it to the context
+                        camelizePluginName: true, // if true, transforms hyphenated plugins names to camel case
+						lazy: true // whether the plugins should be lazy loaded on demand
 					}),
 	path = require('path'),
 	growl = false;

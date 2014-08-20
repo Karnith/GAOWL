@@ -11,10 +11,6 @@ module.exports = {
     },
 
     'create': function(req, res, next) {
-        var params = waterlock._utils.allParams(req);
-        if(waterlock._utils.countTopLevel(waterlock.methods) === 1){
-            params.type = waterlock._utils.accessObjectLikeArray(0, waterlock.methods).authType;
-        }
 
         if (!req.param('email') || !req.param('password')) {
             var usernamePasswordRequiredError = [
@@ -92,11 +88,13 @@ module.exports = {
                     });
 
                     req.session.destroy();
+                    waterlock.logger.debug('user logout');
 
                     res.redirect('/session/new');
                 });
             } else {
                 req.session.destroy();
+                waterlock.logger.debug('user logout');
 
                 res.redirect('/session/new');
             }

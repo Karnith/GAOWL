@@ -43,16 +43,23 @@ module.exports = require('waterlock').actions.user({
                         sails.log.error(err);
                         return next(err);
                     }
-
-                    user.action = " signed-up and logged-in.";
-
-                    User.publishCreate(user);
+                    //user.action = " signed-up and logged-in.";
                     waterlock.engine.attachAuthToUser(auth, user, function (err) {
                         if (err) {
                             sails.log.error(err);
                             res.json(err);
                         }
                         else {
+
+                            user.action = " signed-up and logged-in.";
+
+                            User.publishCreate(user);
+
+                            /*User.publishCreate({
+                                id: user.id,
+                                name: user.name,
+                                action: " signed-up and logged-in."
+                            });*/
                             waterlock.logger.debug('user login success');
                             return res.redirect('/user/show/'+user.id);
                         }

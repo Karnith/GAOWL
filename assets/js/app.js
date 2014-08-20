@@ -61,7 +61,8 @@ var UserIndexPage = {
       user: user.data,
       _csrf: window.overlord.csrf || ''
     };
-
+console.log(obj);
+      console.log(user.data);
     $('tr:last').after(
       JST['assets/templates/addUser.ejs'](obj)
     );
