@@ -16,6 +16,16 @@ $(document).ready(function() {
                   notEmpty: {
                       message: 'The username is required and cannot be empty'
                   },
+                  remote: {
+                      url: '/user/validation?', // route for field validation
+                      data: function(validator) {
+                          return {
+                              name: validator.getFieldElements('name').val(), // field to [post] to validation route
+                              _csrf: validator.getFieldElements('_csrf').val() // field to [post] csrf for route access
+                          };
+                      },
+                      message: 'The username is not available'
+                  },
                   stringLength: {
                       min: 6,
                       max: 30,
@@ -47,18 +57,18 @@ $(document).ready(function() {
                       field: 'name',
                       message: 'The password cannot be the same as username'
                   },
+                  stringLength: {
+                      min: 8,
+                      max: 20,
+                      message: 'The password must be at least 8 characters long'
+                  },
                   identical: {
                       field: 'confirmation',
                       message: 'The password and its confirm are not the same'
                   },
-                  stringLength: {
-                      min: 6,
-                      max: 20,
-                      message: 'The password must be 6 to 20 characters long'
-                  },
                   regexp: {
-                      regexp: /^[a-zA-Z0-9_]+$/,
-                      message: 'The username can only consist of alphabetical, number and underscore'
+                      regexp: /^[a-zA-Z0-9_!@#$%&*]+$/,
+                      message: 'The password can only consist of alphabetical, number and _!@#$%&*'
                   }
               }
           },
@@ -68,18 +78,18 @@ $(document).ready(function() {
                   notEmpty: {
                       message: 'The password is required and cannot be empty'
                   },
+                  stringLength: {
+                      min: 8,
+                      max: 20,
+                      message: 'The password must be at least 8 characters long'
+                  },
                   identical: {
                       field: 'password',
                       message: 'The password and its confirm are not the same'
                   },
-                  stringLength: {
-                      min: 6,
-                      max: 20,
-                      message: 'The password must be 6 to 20 characters long'
-                  },
                   regexp: {
-                      regexp: /^[a-zA-Z0-9_]+$/,
-                      message: 'The username can only consist of alphabetical, number and underscore'
+                      regexp: /^[a-zA-Z0-9_!@#$%&*]+$/,
+                      message: 'The password can only consist of alphabetical, number and _!@#$%&*'
                   }
               }
           }
