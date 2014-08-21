@@ -52,11 +52,6 @@
   "author": "Karnith / JCMar",
   "license": "MIT",
   "devDependencies": {
-    "coveralls": "^2.11.1",
-    "istanbul": "^0.3.0",
-    "jshint": "^2.5.4",
-    "mocha": "^1.21.4",
-    "sails-disk": "^0.10.3",
-    "should": "^4.0.4"
+    "sails-disk": "^0.10.3"
   }
 }
