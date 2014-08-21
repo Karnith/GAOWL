@@ -12,8 +12,26 @@ module.exports = require('waterlock').actions.user({
     'new': function(req, res) {
         res.view();
     },
+    // route used to [post] verify fields from form before submit
+    validation: function(req, res) {
+        var params = req.params.all();
+        User.findOne({name: params.name}).exec(function(err, user){
+            if(err) {
+                waterlock.logger.debug(err);
+                res.serverError();
+            }
+            if(!user) {
 
-    create: function(req, res, next) {
+                return res.ok({valid: true});
+            }
+            else{
+                sails.log.error('Name is in use!');
+                return res.ok({valid: false});
+            }
+        });
+    },
+    // route to create user, user auth and associate them
+    create: function(req, res) {
         var params = req.params.all(),
             auth = {
                 email: params.email,
@@ -28,7 +46,7 @@ module.exports = require('waterlock').actions.user({
         User.create(userObj)
             .exec(function (err, user){
                 if (err){
-                    sails.log.error(err);
+                    waterlock.logger.debug(err);
                     req.session.flash = {
                         err: err
                     };
@@ -39,59 +57,69 @@ module.exports = require('waterlock').actions.user({
 
                 user.online = true;
                 req.session.authenticated = true;
-                user.save(function(err, user) {
-                    if(err) {
-                        sails.log.error(err);
-                        return next(err);
+                waterlock.engine.attachAuthToUser(auth, user, function (err) {
+                    if (err) {
+                        waterlock.logger.debug(err);
+                        res.redirect('user/new');
                     }
 
-                    waterlock.engine.attachAuthToUser(auth, user, function (err) {
-                        if (err) {
-                            sails.log.error(err);
-                            res.redirect('user/new');
-                        }
+                    user.action = " signed-up and logged-in.";
 
-                        user.action = " signed-up and logged-in.";
+                    User.publishCreate(user);
 
-                        User.publishCreate(user);
-
-                        waterlock.logger.debug('user login success');
-                        return res.redirect('/user/show/'+user.id);
-                    });
+                    waterlock.logger.debug('user login success');
+                    return res.redirect('/user/show/'+user.id);
                 });
             });
     },
-
+    // route to [get] and show user
     show: function(req, res, next) {
-        User.findOne(req.param('id'), function foundUser(err, user) {
-            if (err) return next(err);
-            if (!user) return next();
+        var params = req.params.all()
+        User.findOne(params.id, function foundUser(err, user) {
+            if(err) {
+                waterlock.logger.debug(err);
+                return req.serverError();
+            }
+            if(!user) {
+                waterlock.logger.debug('User not found.');
+                return next();
+            }
             res.view({
                 user: user
             });
         });
     },
-
+    // route to [get] and show all users
     index: function(req, res, next) {
         User.find(function foundUsers(err, users) {
-            if (err) return next(err);
+            if(err) {
+                waterlock.logger.debug(err);
+                return req.serverError();
+            }
             res.view({
                 users: users
             });
         });
     },
-
+    // route used to [get] user fields for edit
     edit: function(req, res, next) {
-        User.findOne(req.param('id'), function foundUser(err, user) {
-            if (err) return next(err);
-            if (!user) return next();
+        var params = req.params.all();
+        User.findOne(params.id, function foundUser(err, user) {
+            if(err) {
+                waterlock.logger.debug(err);
+                return req.serverError();
+            }
+            if(!user) {
+                waterlock.logger.debug('User not found.');
+                return next();
+            }
 
             res.view({
                 user: user
             })
         })
     },
-
+    // route to [post] edited fields and save to user/auth collections
     update: function(req, res, next) {
         var params = req.params.all(),
             userObj = {
@@ -102,13 +130,11 @@ module.exports = require('waterlock').actions.user({
             authObj = {
                 email: params.email,
                 password: params.password
-            };
+            },
+            admin = false,
+            adminParam = params.admin;
 
         if (req.session.user.admin) {
-            // Changed this logic to here. I prefer to send clean stuff to models
-            var admin = false;
-            var adminParam = req.param('admin');
-
             if (typeof adminParam !== 'undefined') {
                 if (adminParam === 'unchecked') {
                     admin = false;
@@ -121,7 +147,7 @@ module.exports = require('waterlock').actions.user({
 
         User.update(params.id, userObj).exec(function(err) {
             if (err) {
-                sails.log.error(err);
+                waterlock.logger.debug(err);
                 return res.redirect('/user/edit/' + params.id);
             }
 
@@ -131,7 +157,7 @@ module.exports = require('waterlock').actions.user({
 
             Auth.update({user: req.session.user.id}, authObj).exec( function(err){
                 if(err){
-                    sails.log.error(err);
+                    waterlock.logger.debug(err);
                     return res.redirect('/user/edit/' + params.id);
                 }
                 req.session.user.email = params.email;
@@ -139,29 +165,29 @@ module.exports = require('waterlock').actions.user({
             });
         });
     },
-
+    // route to [post] user id to delete user record from user/auth collections
     destroy: function(req, res, next) {
         var params = req.params.all();
         User.unsubscribe(req.socket, params.id);
         User.findOneById(params.id).exec(function(err, usr) {
             if(err) {
-                sails.log.error(err);
+                waterlock.logger.debug(err);
                 return res.redirect('/user');
             }
             if(!usr) {
-                sails.log.error('User doesn\'t exist.');
+                waterlock.logger.debug('User doesn\'t exist.');
                 return res.redirect('/user');
             }
 
             User.destroy({id: usr.id}).exec(function(err, record) {
                 if(err) {
-                    sails.log.error(err);
+                    waterlock.logger.debug(err);
                     return res.redirect('/user');
                 }
                 var auth = record.map(function(rId){ return rId.id;});
-                Auth.destroy({user: auth}).exec(function(err, rAuth){
+                Auth.destroy({user: auth}).exec(function(err){
                     if(err) {
-                        sails.log.error(err);
+                        waterlock.logger.debug(err);
                         return res.redirect('/user');
                     }
 
@@ -177,10 +203,13 @@ module.exports = require('waterlock').actions.user({
             });
         });
     },
-
+    // route [web socket] to add users for flash messages
     subscribe: function(req, res) {
-        User.find(function foundUsers(err, users) {
-            if (err) return next(err);
+        User.find(function(err, users) {
+            if(err) {
+                waterlock.logger.debug(err);
+                return res.serverError();
+            }
 
             User.watch(req.socket);
 

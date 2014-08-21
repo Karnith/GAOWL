@@ -29,7 +29,7 @@ module.exports = {
 
         User.findOneByEmail(params.email).populate('auth').exec(function(err, user){
             if(err) {
-                sails.log.error(err);
+                waterlock.logger.debug(err);
                 return next(err);
             }
             if (user) {
@@ -42,7 +42,7 @@ module.exports = {
                     delete (req.session.user.auth);
                     user.save(function(err, user) {
                         if(err) {
-                            sails.log.error(err);
+                            waterlock.logger.debug(err);
                             return next(err);
                         }
 
@@ -63,7 +63,7 @@ module.exports = {
                     });
                 }else{
                     if(err) {
-                        sails.log.error(err);
+                        waterlock.logger.debug(err);
                         return res.redirect('session/new')
                     }
                     return res.redirect('session/new');
@@ -71,7 +71,7 @@ module.exports = {
             } else {
                 //TODO redirect to register
                 if(err) {
-                    sails.log.error(err);
+                    waterlock.logger.debug(err);
                     return res.redirect('session/new');
                 }
                 return res.redirect('session/new');
@@ -84,13 +84,12 @@ module.exports = {
             var userId = req.session.user.id;
 
             if(user) {
-                User.unsubscribe(req.socket, userId);
                 User.update(userId, {
                         online: false
                     },
                     function(err) {
                         if(err) {
-                            sails.log.error(err);
+                            waterlock.logger.debug(err);
                             return next(err);
                         }
 
@@ -109,7 +108,6 @@ module.exports = {
                 });
             } else {
                 req.session.destroy();
-                User.unsubscribe(req.socket, userId);
                 waterlock.logger.debug('user logout');
 
                 res.redirect('/');
@@ -117,4 +115,3 @@ module.exports = {
         });
     }
 };
-

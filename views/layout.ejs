@@ -29,7 +29,9 @@
     -->
 
     <!--STYLES-->
-	
+    <link rel="stylesheet" href="/vendor/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="/vendor/bootstrapValidator/dist/css/bootstrapValidator.css">
+    <link rel="stylesheet" href="/styles/importer.css">
     <!--STYLES END-->
     <script type="text/javascript">
         window.overlord = { csrf: '<%= _csrf %>'};
@@ -116,7 +118,7 @@
     -->
 
     <!--TEMPLATES-->
-
+    <script type="text/javascript" src="/jst.js"></script>
     <!--TEMPLATES END-->
 
 
@@ -144,7 +146,13 @@
     -->
 
     <!--SCRIPTS-->
-
+    <script src="/vendor/jquery/dist/jquery.js"></script>
+    <script src="/vendor/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="/vendor/bootstrapValidator/dist/js/bootstrapValidator.js"></script>
+    <script src="/vendor/underscore/underscore.js"></script>
+    <script src="/js/dependencies/sails.io.js"></script>
+    <script src="/js/app.js"></script>
+    <script src="/js/customValidate.js"></script>
     <!--SCRIPTS END-->
   </body>
 </html>
