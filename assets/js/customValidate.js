@@ -1,5 +1,5 @@
 $(document).ready(function() {
-  $('#sign-up-form, #user-edit-form').bootstrapValidator({
+    $('#sign-up-form, #user-edit-form, #user-password-form').bootstrapValidator({
       excluded: [':disabled', ':hidden', ':not(:visible)'],
       feedbackIcons: {
           valid: 'glyphicon glyphicon-ok',
@@ -94,5 +94,15 @@ $(document).ready(function() {
               }
           }
       }
-  });
+    });
+    function showAlert() {
+        $("#svrResponse").load(function () {
+            var serverResponse = $("#svrResponse").contents().find("pre").text();
+            console.log('this is the response: '+serverResponse);
+            if (serverResponse == '200') {
+                $("#reset").show();
+            }
+        });
+    }
+    showAlert();
 });

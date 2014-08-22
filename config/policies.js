@@ -48,8 +48,13 @@ module.exports.policies = {
       'edit': ['flash','userCanSeeProfile'],
       'update': 'userCanSeeProfile',
       'jwt': ['sessionAuth'],
-      'validation': true,
+      'validation': [true],
+      'reset': [true],
+      'password': [true],
       '*': 'admin'
+  },
+  AuthController: {
+      'reset': [true]
   }
 	// RabbitController: {
 

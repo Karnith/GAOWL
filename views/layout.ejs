@@ -71,6 +71,9 @@
                   <% } %>
               </div>
               <% if (!session.authenticated) { %>
+              <div class="navbar-right" style="margin-left: 5px">
+                  <a class="btn btn-info navbar-btn navbar-right" href="/user/reset">Forgot Password</a>
+              </div>
               <form class="navbar-form navbar-right" action="/session/create">
                   <div class="form-group">
                       <input type="text" placeholder="Email" name="email" class="form-control">

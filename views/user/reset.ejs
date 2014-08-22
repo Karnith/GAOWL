@@ -1,0 +1,15 @@
+<div class="centered text-center container alert alert-info alert-dismissible" style="max-width: 516px;display:none" role="alert" id="reset">
+    <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+    <p>If your email is found in the system a password reset link will be sent.</p>
+    <p>Please check your spam folder if email isn't received, otherwise email was incorrect.</p>
+</div>
+<form action="/auth/reset" method="POST" target="svrResponse" class="form-signin" id="user-reset-form">
+    <h2> Reset Password </h2>
+
+    <div class="control-group form-group">
+        <input placeholder="Enter your account email" type="text" class="form-control" name="email">
+    </div>
+    <input type="submit" value="Proceed" class="btn btn-lg btn-primary btn-block"/>
+    <input type="hidden" name="_csrf" value="<%= _csrf %>" />
+</form>
+<iframe name="svrResponse" id="svrResponse" class="hide"></iframe>

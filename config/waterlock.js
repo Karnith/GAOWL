@@ -31,20 +31,20 @@ module.exports.waterlock = {
           options:{
             service: 'Gmail',
             auth: {
-              user: 'gmail.user@gmail.com',
-              pass: 'userpass'
+              user: 'user@gmail.com',
+              pass: 'password'
             }
           },
           from: 'no-reply@domain.com',
           subject: 'Your password reset!',
-          forwardUrl: 'http://localhost'
+          forwardUrl: '/user/password'
         },  
         template:{
           file: '../views/email.jade',
           vars:{}
         }
       },
-      createOnNotFound: true
+      createOnNotFound: false
     }
   ],
 

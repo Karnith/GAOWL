@@ -12,6 +12,12 @@ module.exports = require('waterlock').actions.user({
     'new': function(req, res) {
         res.view();
     },
+    reset: function(req, res) {
+        res.view();
+    },
+    password: function(req, res) {
+        res.view();
+    },
     // route used to [post] verify fields from form before submit
     validation: function(req, res) {
         var params = req.params.all();

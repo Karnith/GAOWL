@@ -36,6 +36,9 @@ module.exports.routes = {
     view: 'index'
   }//,
 
+ /* 'get /auth/reset': 'AuthController.reset',
+  'post /auth/reset': 'AuthController.reset'*/
+
   /***************************************************************************
   *                                                                          *
   * Custom routes here...                                                    *
