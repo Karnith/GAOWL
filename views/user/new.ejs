@@ -6,29 +6,31 @@
 </ul>
 <% } %>
 
-<form action="/user/create" method="POST" id="sign-up-form" class="form-signin" id="sign-up-form">
-  <h2 class="form-signin-heading">Create an account</h2>
+<form action="/user/create" method="POST" id="sign-up-form" class="form-signin pwd-container" id="sign-up-form">
+    <h2 class="form-signin-heading">Members Registration</h2>
 
-  <div class="control-group form-group">
-    <input type="text" class="form-control" placeholder="your name" name="name">
-  </div>
+    <div class="control-group form-group">
+        <input type="text" class="form-control vField" placeholder="your name" name="name">
+    </div>
 
-  <div class="control-group form-group">
-    <input type="text" class="form-control" placeholder="your title" name="title">
-  </div>
+    <div class="control-group form-group">
+        <input type="text" class="form-control" placeholder="your title" name="title">
+    </div>
 
-  <div class="control-group form-group">
-    <input type="text" class="form-control" placeholder="email address" name="email">
-  </div>
+    <div class="control-group form-group">
+        <input type="text" class="form-control vField" placeholder="email address" name="email">
+    </div>
 
-  <div class="control-group form-group">
-    <input type="password" class="form-control" placeholder="password" name="password" id="password">
-  </div>
+    <div class="control-group form-group">
+        <input type="password" class="form-control vField" placeholder="password" name="password" id="password" data-bv-feedbackicons="false">
+    </div>
 
-  <div class="control-group form-group">
-    <input type="password" class="form-control" placeholder="password confirmation" name="confirmation">
-    <br />
-  </div>
+<!--
+      <div class="control-group form-group">
+        <input type="password" class="form-control vField" placeholder="password confirmation" name="confirmation">
+      </div>
+-->
+  <br />
 
   <input type="submit" class="btn btn-lg btn-primary btn-block" value="Create Account"/>
   <input type="hidden" name="_csrf" value="<%= _csrf %>" />

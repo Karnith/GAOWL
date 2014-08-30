@@ -1,22 +1,18 @@
-<!--
- * Created by mmarino on 8/14/2014.
- -->
-<form action="/session/create" method="POST" class="form-signin">
-    <h2 class="form-signin-heading">Please sign in...</h2>
-
-    <% if(flash && flash.err) { %>
-    <ul class="alert alert-success">
-        <% Object.keys(flash.err).forEach(function(error) { %>
-        <li><%- JSON.stringify(flash.err[error]) %></li>
-        <% }) %>
-    </ul>
-    <% } %>
+<% if(flash && flash.err) { %>
+<ul class="alert alert-success">
+    <% Object.keys(flash.err).forEach(function(error) { %>
+    <li><%- JSON.stringify(flash.err[error]) %></li>
+    <% }) %>
+</ul>
+<% } %>
+<form action="/session/create" method="POST" class="form-signin" id="form-signin">
+    <h2 class="form-signin-heading">Members Login</h2>
 
     <div class="form-group">
         <input type="text" class="form-control" placeholder="Email address" name="email">
     </div>
     <div class="form-group">
-        <input type="password" class="form-control" placeholder="Password" name="password">
+        <input type="password" class="form-control vField" placeholder="Password" name="password" id="password" data-bv-feedbackicons="false">
     </div>
     <div class="form-group">
         <input type="submit" class="btn btn-lg btn-primary btn-block" value="Sign-in"/>
