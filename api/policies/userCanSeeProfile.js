@@ -11,7 +11,7 @@ module.exports = function(req, res, ok) {
         return;
     }
 
-    var sessionUserMatchesId = req.session.user.id === req.param('id');
+    var sessionUserMatchesId = req.session.user.id.toString() === req.param('id');
     var isAdmin = req.session.user.admin;
 
     // The requested id does not match the user's id,
