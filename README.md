@@ -4,7 +4,7 @@
 
 ### Requirements
 
-Sails-disk or db adapter, Node v.0.10.30.
+- Sails-disk or db adapter, Node v.0.10.30.
 
 ### Install
 
