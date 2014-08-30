@@ -18,6 +18,7 @@ module.exports.models = {
   *                                                                          *
   ***************************************************************************/
 
-  connection: 'mongoServer',
+  //connection: 'mongoServer',
+  connection: 'localDiskDb',
   migrate: 'safe'
 };
