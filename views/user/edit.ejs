@@ -1,43 +1,43 @@
 <% if(flash && flash.err) { %>
-<ul class="alert alert-success">
-    <% Object.keys(flash.err).forEach(function(error) { %>
-    <li><%- JSON.stringify(flash.err[error]) %></li>
-    <% }) %>
-</ul>
+    <ul class="alert alert-success">
+        <% Object.keys(flash.err).forEach(function(error) { %>
+            <li><%- JSON.stringify(flash.err[error]) %></li>
+        <% }) %>
+    </ul>
 <% } %>
 
 <form action="/user/update/<%= user.id %>" method="POST" class="form-signin" id="user-edit-form">
     <h2> Profile Edit </h2>
 
     <div class="control-group form-group">
-        <input value="<%= user.name %>" type="text" class="form-control" name="name">
+        <input type="text" value="<%= user.name %>" class="form-control vNField" name="name" id="name">
     </div>
 
     <div class="control-group form-group">
-        <input value="<%= user.title %>" type="text" class="form-control" name="title">
+        <input type="text" value="<%= user.title %>" class="form-control" name="title" id="title">
     </div>
 
     <div class="control-group form-group">
-        <input value="<%= user.email %>" type="text" class="form-control" name="email">
+        <input type="text" value="<%= user.email %>" class="form-control vEField" name="email" id="email">
     </div>
 
     <div class="control-group form-group">
-        <input type="password" class="form-control" placeholder="New Password" name="password" id="password">
+        <input type="password" class="form-control vField" placeholder="New Password" name="password" id="password">
     </div>
 
     <div class="control-group form-group">
-        <input type="password" class="form-control" placeholder="New Password confirmation" name="confirmation">
-        <br />
+        <input type="password" class="form-control vField" placeholder="New Password confirmation" name="confirmation" id="confirmation">
     </div>
+    <br />
 
     <% if (session.authenticated && session.user.admin) { %>
-    <% if (user.admin) { %>
-    <input type="hidden" name="admin" value="unchecked">
-    <label class="checkbox"><input type="checkbox" name="admin" checked> Admin</label>
-    <% } else { %>
-    <input type="hidden" name="admin" value="unchecked">
-    <label class="checkbox"><input type="checkbox" name="admin"> Admin</label>
-    <% } %>
+        <% if (user.admin) { %>
+            <input type="hidden" name="admin" value="unchecked" />
+            <label class="checkbox"><input type="checkbox" name="admin" checked> Admin</label>
+        <% } else { %>
+            <input type="hidden" name="admin" value="unchecked" />
+            <label class="checkbox"><input type="checkbox" name="admin"> Admin</label>
+        <% } %>
     <% } %>
     <input type="submit" value="Proceed" class="btn btn-lg btn-primary btn-block"/>
     <input type="hidden" name="_csrf" value="<%= _csrf %>" />

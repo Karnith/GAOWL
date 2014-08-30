@@ -24,11 +24,9 @@ Mongo has already been configured for localhost with no username and password.
 
 ### Issues
 
-- Currently this app works with databases, but not with sails-disk due to a bug in the adapter, More on this can be found [here](https://github.com/balderdashy/sails-disk/issues/21)
 - Issue with node version 0.10.31 due to gulp-imagemin package [#60](https://github.com/sindresorhus/gulp-imagemin/issues/60), recommend staying at node version 0.10.30 until it is fixed or replacement for gulp-imagemin is found.
 - Issue with grunt error in console (false positive, has no effect on app) due to grunt being called in defaultHooks.js in sails module. To remove error, comment out the ``` 'grunt' ``` on line 25.
 - On linux, usse with .tmp directory not cleaning properly due to permissions being set on dir structure and files on creation. see [here](https://github.com/Karnith/GAOWL/issues/7#issuecomment-53947676) for details.
-
 
 ## License
 
