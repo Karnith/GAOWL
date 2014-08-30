@@ -18,7 +18,7 @@ $(document).ready(function() {
                       message: 'The username is required and cannot be empty'
                   },
                   remote: {
-                      url: '/members/validation?', // route for field validation
+                      url: '/user/validation?', // route for field validation
                       data: function(validator) {
                           return {
                               name: validator.getFieldElements('name').val(), // field to [post] to validation route
@@ -48,7 +48,7 @@ $(document).ready(function() {
                       message: 'The input is not a valid email address'
                   },
                   remote: {
-                      url: '/members/validation?', // route for field validation
+                      url: '/user/validation?', // route for field validation
                       data: function(validator) {
                           return {
                               name: validator.getFieldElements('email').val(), // field to [post] to validation route
