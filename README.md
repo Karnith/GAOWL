@@ -4,7 +4,7 @@
 
 ### Requirements
 
-Sails-disk or db adapter, Node v.0.10.30.
+-As for right now, the demo will only work with database adapter. Please use your adapter of choice until the issue in sails-disk is resolved.
 
 ### Install
 
