@@ -11,13 +11,10 @@ module.exports = {
     },
 
     'create': function(req, res, next) {
-        var params = waterlock._utils.allParams(req);
-        if(waterlock._utils.countTopLevel(waterlock.methods) === 1){
-            params.type = waterlock._utils.accessObjectLikeArray(0, waterlock.methods).authType;
-        }
-
+        var params = req.params.all(),
+            usernamePasswordRequiredError;
         if (!params.email || !params.password) {
-            var usernamePasswordRequiredError = [
+            usernamePasswordRequiredError = [
                 {
                     name: 'usernamePasswordRequired',
                     message: 'You must enter both a username and password.'
@@ -31,15 +28,23 @@ module.exports = {
         }
 
         User.findOneByEmail(params.email).populate('auth').exec(function(err, user){
+            if(err) {
+                waterlock.logger.debug(err);
+                return next(err);
+            }
             if (user) {
+                req.session.user = user;
                 if(bcrypt.compareSync(params.password, user.auth.password)){
 
                     req.session.authenticated = true;
-                    req.session.User = user;
 
                     user.online = true;
+                    delete (req.session.user.auth);
                     user.save(function(err, user) {
-                        if (err) return next(err);
+                        if(err) {
+                            waterlock.logger.debug(err);
+                            return next(err);
+                        }
 
                         User.publishUpdate(user.id, {
                             loggedIn: true,
@@ -49,51 +54,64 @@ module.exports = {
                         });
 
 
-                        if (req.session.User.admin) {
+                        if (req.session.user.admin) {
                             res.redirect('/user');
                             return;
                         }
-                        waterlock.cycle.loginSuccess(req, res, user);
-
+                        waterlock.logger.debug('user login success');
                         res.redirect('/user/show/' + user.id);
                     });
                 }else{
-                    waterlock.cycle.loginFailure(req, res, user, {error: 'Invalid '+scope.type+' or password'});
+                    if(err) {
+                        waterlock.logger.debug(err);
+                        return res.redirect('session/new')
+                    }
+                    return res.redirect('session/new');
                 }
             } else {
                 //TODO redirect to register
-                waterlock.cycle.loginFailure(req, res, null, {error: 'user not found'});
+                if(err) {
+                    waterlock.logger.debug(err);
+                    return res.redirect('session/new');
+                }
+                return res.redirect('session/new');
             }
         });
     },
 
     destroy: function(req, res, next) {
-        User.findOne(req.session.User.id, function foundUsers(err, user) {
-            var userId = req.session.User.id;
+        User.findOne(req.session.user.id, function foundUsers(err, user) {
+            var userId = req.session.user.id;
 
-            if (user) {
+            if(user) {
                 User.update(userId, {
-                    online: false
-                }, function(err) {
-                    if (err) return next(err);
+                        online: false
+                    },
+                    function(err) {
+                        if(err) {
+                            waterlock.logger.debug(err);
+                            return next(err);
+                        }
 
-                    User.publishUpdate(user.id, {
-                        loggedIn: false,
-                        id: user.id,
-                        name: user.name,
-                        action: ' has logged out.'
-                    });
+                        User.publishUpdate(userId, {
+                            loggedIn: false,
+                            id: user.id,
+                            name: user.name,
+                            action: ' has logged out.'
+                        });
 
                     req.session.destroy();
 
-                    res.redirect('/session/new');
+                    waterlock.logger.debug('user logout');
+
+                    res.redirect('/');
                 });
             } else {
                 req.session.destroy();
+                waterlock.logger.debug('user logout');
 
-                res.redirect('/session/new');
+                res.redirect('/');
             }
         });
     }
 };
-

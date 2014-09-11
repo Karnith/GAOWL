@@ -2,7 +2,7 @@
  * Created by mmarino on 8/15/2014.
  */
 module.exports = function(req, res, ok) {
-    if (req.session.User && req.session.User.admin) {
+    if (req.session.user && req.session.user.admin) {
         return ok();
     }
 
@@ -12,6 +12,6 @@ module.exports = function(req, res, ok) {
             err: requireAdminError
         };
         res.redirect('/session/new');
-        return;
+        //return;
     }
 };

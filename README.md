@@ -1,10 +1,10 @@
-# GAOWL (under development)
+# GAOWL
 
-a [Sails](http://sailsjs.org) application demo built with my gulp generators, waterlock and waterlock local auth.
+[![Dependency Status][dependency-image]][dependency-url] [![MIT License][license-image]][license-url]
 
 ### Requirements
 
-As for right now, the demo will only work with database adapter. Please use your adapter of choice until the issue in sails-disk is resolved.
+- Sails-disk or db adapter, Node v.0.10.30.
 
 ### Install
 
@@ -12,12 +12,6 @@ To use this demo do the following:
 
 ```sh
 npm install
-```
-
-Then go to the node_modules folder and change  waterlock-local-auth/lib/controllers/actions/login.js to use bcryptjs instead of bcrypt (this is needed as bcrypt has dependencies that have issues compiling on windows)
-
-```
-var bcrypt = require('bcrypt'); => var bcrypt = require('bcryptjs');
 ```
 
 now you can do a ``` sails lift ```
@@ -30,5 +24,22 @@ Mongo has already been configured for localhost with no username and password.
 
 ### Issues
 
-Currently this app works with databases, but not with sails-disk due to a bug in the adapter
-More on this can be found [here](https://github.com/balderdashy/sails-disk/issues/21)
+- Issue with node version 0.10.31 due to gulp-imagemin package [#60](https://github.com/sindresorhus/gulp-imagemin/issues/60), recommend staying at node version 0.10.30 until it is fixed or replacement for gulp-imagemin is found.
+- Issue with grunt error in console (false positive, has no effect on app) due to grunt being called in defaultHooks.js in sails module. To remove error, comment out the ``` 'grunt' ``` on line 25.
+- On linux, usse with .tmp directory not cleaning properly due to permissions being set on dir structure and files on creation. see [here](https://github.com/Karnith/GAOWL/issues/7#issuecomment-53947676) for details.
+
+## License
+
+**[MIT](./LICENSE)**
+&copy; 2014 [Karnith](http://github.com/Karnith)
+
+[Sails](http://sailsjs.org) is free and open-source under the [MIT License](http://sails.mit-license.org/).
+
+[license-image]: http://img.shields.io/badge/license-MIT-blue.svg?style=flat
+[license-url]: LICENSE.md
+
+[dependency-image]: https://gemnasium.com/Karnith/GAOWL.svg?style=flat
+[dependency-url]: https://gemnasium.com/Karnith/GAOWL
+
+[coverage-image]: http://img.shields.io/coveralls/Karnith/GOWL/master.svg?style=flat
+[coverage-url]: https://coveralls.io/r/Karnith/GOWL?branch=master

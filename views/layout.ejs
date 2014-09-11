@@ -58,9 +58,9 @@
           <div class="navbar-collapse collapse">
               <ul class="nav navbar-nav">
                   <% if (session.authenticated) { %>
-                  <li class="active"><a href="/user/show/<%= session.User.id %>"><%= session.User.name %> </a> </li>
+                  <li class="active"><a href="/user/show/<%= session.user.id %>"><%= session.user.name %> </a> </li>
                   <% } %>
-                  <% if (session.authenticated && session.User.admin) { %>
+                  <% if (session.authenticated && session.user.admin) { %>
                   <li><a href="/user">User Administration</a></li>
                   <li><a href="#">Placeholder2</a></li>
                   <% } %>
@@ -71,6 +71,9 @@
                   <% } %>
               </div>
               <% if (!session.authenticated) { %>
+              <div class="navbar-right" style="margin-left: 5px">
+                  <a class="btn btn-info navbar-btn navbar-right" href="/user/reset">Forgot Password</a>
+              </div>
               <form class="navbar-form navbar-right" action="/session/create">
                   <div class="form-group">
                       <input type="text" placeholder="Email" name="email" class="form-control">
@@ -118,7 +121,7 @@
     -->
 
     <!--TEMPLATES-->
-    
+    <script type="text/javascript" src="/jst.js"></script>
     <!--TEMPLATES END-->
 
 
@@ -153,6 +156,7 @@
     <script src="/js/dependencies/sails.io.js"></script>
     <script src="/js/app.js"></script>
     <script src="/js/customValidate.js"></script>
+    <script src="/js/password.js"></script>
     <!--SCRIPTS END-->
   </body>
 </html>

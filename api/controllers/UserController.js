@@ -12,9 +12,33 @@ module.exports = require('waterlock').actions.user({
     'new': function(req, res) {
         res.view();
     },
+    reset: function(req, res) {
+        res.view();
+    },
+    password: function(req, res) {
+        res.view();
+    },
+    // route used to [post] verify fields from form before submit
+    validation: function(req, res) {
+        var params = req.params.all();
+        User.findOne({name: params.name}).exec(function(err, user){
+            if(err) {
+                waterlock.logger.debug(err);
+                res.serverError();
+            }
+            if(!user) {
 
-    create: function(req, res, next) {
-        var params = waterlock._utils.allParams(req),
+                return res.ok({valid: true});
+            }
+            else{
+                sails.log.error('Name is in use!');
+                return res.ok({valid: false});
+            }
+        });
+    },
+    // route to create user, user auth and associate them
+    create: function(req, res) {
+        var params = req.params.all(),
             auth = {
                 email: params.email,
                 password: params.password
@@ -24,118 +48,104 @@ module.exports = require('waterlock').actions.user({
                 title: params.title,
                 email: params.email
             };
-/*            headderParams = [
-                'params.confirmation',
-                'params._csrf',
-                'params.host',
-                'params.connection',
-                'params.content-length',
-                'params.cache-control',
-                'params.accept',
-                'params.origin',
-                'params.user-agent',
-                'params.content-type',
-                'params.referer',
-                'params.accept-encoding',
-                'params.accept-language',
-                'params.cookie',
-                'params.email',
-                'params.password'
-            ];
-        delete(params.confirmation);
-        delete(params._csrf);
-        delete(params.host);
-        delete(params.connection);
-        delete(params.content-length);
-        delete(params.cache-control);
-        delete(params.accept);
-        delete(params.origin);
-        delete(params.user-agent);
-        delete(params.content-type);
-        delete(params.referer);
-        delete(params.accept-encoding);
-        delete(params.accept-language);
-        delete(params.cookie);
-        delete(params.email);
-        delete(params.password);
-*/
 
         User.create(userObj)
             .exec(function (err, user){
                 if (err){
-                    sails.log.error(err);
+                    waterlock.logger.debug(err);
                     req.session.flash = {
                         err: err
                     };
 
                     return res.redirect('/user/new');
                 }
-                req.session.User = user;
-
-                user.online = true;
+                req.session.user = user;
                 req.session.authenticated = true;
-                user.save(function(err, user) {
-                    if (err) return next(err);
-
-                    user.action = " signed-up and logged-in.";
-                    waterlock.engine.attachAuthToUser(auth, user, function (err) {
+                waterlock.engine.attachAuthToUser(auth, user, function (err) {
+                    if (err) {
+                        waterlock.logger.debug(err);
+                        res.redirect('user/new');
+                    }
+                    user.online = true;
+                    user.save(function (err, user) {
                         if (err) {
-                            res.json(err);
+                            sailsLog('err', err);
+                            return next(err);
                         }
-                        else {
-                            waterlock.cycle.loginSuccess(req, res, user);
-                            return res.redirect('/user/show/'+user.id);
-                        }
+
+                        user.action = " signed-up and logged-in.";
+
+                        User.publishCreate(user);
+
+                        waterlock.logger.debug('user login success');
+                        return res.redirect('/user/show/'+user.id);
                     });
                 });
             });
     },
-
+    // route to [get] and show user
     show: function(req, res, next) {
-        var params = waterlock._utils.allParams(req);
+        var params = req.params.all()
         User.findOne(params.id, function foundUser(err, user) {
-            if (err) return next(err);
-            if (!user) return next();
+            if(err) {
+                waterlock.logger.debug(err);
+                return req.serverError();
+            }
+            if(!user) {
+                waterlock.logger.debug('User not found.');
+                return next();
+            }
             res.view({
                 user: user
             });
         });
     },
-
+    // route to [get] and show all users
     index: function(req, res, next) {
         User.find(function foundUsers(err, users) {
-            if (err) return next(err);
+            if(err) {
+                waterlock.logger.debug(err);
+                return req.serverError();
+            }
             res.view({
                 users: users
             });
         });
     },
-
+    // route used to [get] user fields for edit
     edit: function(req, res, next) {
-        var params = waterlock._utils.allParams(req);
+        var params = req.params.all();
         User.findOne(params.id, function foundUser(err, user) {
-            if (err) return next(err);
-            if (!user) return next();
+            if(err) {
+                waterlock.logger.debug(err);
+                return req.serverError();
+            }
+            if(!user) {
+                waterlock.logger.debug('User not found.');
+                return next();
+            }
 
             res.view({
                 user: user
             })
         })
     },
-
+    // route to [post] edited fields and save to user/auth collections
     update: function(req, res, next) {
-        var params = waterlock._utils.allParams(req),
+        var params = req.params.all(),
             userObj = {
-            name: params.name,
-            title: params.title,
-            email: params.email
-        };
+                name: params.name,
+                title: params.title,
+                email: params.email
+            },
+            authObj = {
+                email: params.email,
+                password: params.password
+            },
+            admin = false,
+            adminParam = params.admin;
 
-        if (req.session.User.admin) {
-            // Changed this logic to here. I prefer to send clean stuff to models
-            var admin = false;
-            var adminParam = params.admin;
-
+        if (req.session.user.admin) {
             if (typeof adminParam !== 'undefined') {
                 if (adminParam === 'unchecked') {
                     admin = false;
@@ -146,46 +156,77 @@ module.exports = require('waterlock').actions.user({
             userObj.admin = admin;
         }
 
-        User.update(params.id, userObj, function userUpdated (err) {
+        User.update(params.id, userObj).exec(function(err) {
             if (err) {
-                sails.log.error(err);
+                waterlock.logger.debug(err);
                 return res.redirect('/user/edit/' + params.id);
             }
 
-            res.redirect('/user/show/' + params.id);
-        });
-    },
+            if(!authObj.password || authObj.password === 'undefined') {
+                delete (authObj.password);
+            }
 
-    destroy: function(req, res, next) {
-        var params = waterlock._utils.allParams(req);
-        User.findOne(params.id, function foundUser(err, user) {
-            if (err) return next(err);
-            if (!user) return next('User doesn\'t exist.');
-
-            User.destroy(params.id, function userDestroyed(err) {
-                if (err) return next(err);
-
-                User.publishUpdate(user.id, {
-                    name: user.name,
-                    action: ' has been destroyed.'
-                });
-
-                User.publishDestroy(user.id);
+            Auth.update({user: req.session.user.id}, authObj).exec( function(err){
+                if(err){
+                    waterlock.logger.debug(err);
+                    return res.redirect('/user/edit/' + params.id);
+                }
+                req.session.user.email = params.email;
+                res.redirect('/user/show/' + params.id);
             });
-
-            res.redirect('/user');
         });
     },
+    // route to [post] user id to delete user record from user/auth collections
+    destroy: function(req, res, next) {
+        var params = req.params.all();
+        User.unsubscribe(req.socket, params.id);
+        User.findOneById(params.id).exec(function(err, usr) {
+            if(err) {
+                waterlock.logger.debug(err);
+                return res.redirect('/user');
+            }
+            if(!usr) {
+                waterlock.logger.debug('User doesn\'t exist.');
+                return res.redirect('/user');
+            }
 
+            User.destroy({id: usr.id}).exec(function(err, record) {
+                if(err) {
+                    waterlock.logger.debug(err);
+                    return res.redirect('/user');
+                }
+                var auth = record.map(function(rId){ return rId.id;});
+                Auth.destroy({user: auth}).exec(function(err){
+                    if(err) {
+                        waterlock.logger.debug(err);
+                        return res.redirect('/user');
+                    }
+
+                    User.publishUpdate(usr.id, {
+                        id: usr.id,
+                        name: usr.name,
+                        action: ' has been destroyed.'
+                    });
+
+                    User.publishDestroy(usr.id);
+                    res.redirect('/user');
+                });
+            });
+        });
+    },
+    // route [web socket] to add users for flash messages
     subscribe: function(req, res) {
-        User.find(function foundUsers(err, users) {
-            if (err) return next(err);
+        User.find(function(err, users) {
+            if(err) {
+                waterlock.logger.debug(err);
+                return res.serverError();
+            }
 
             User.watch(req.socket);
 
             User.subscribe(req.socket, users);
 
             res.send(200);
-        })
+        });
     }
 });

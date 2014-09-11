@@ -28,7 +28,7 @@ module.exports = function(gulp, plugins, growl) {
 				.pipe(gulp.dest('views/'))
 				.pipe(plugins.if(growl, plugins.notify({ message: 'sails-linker-gulp devJs task complete' })));
 	});
-	  
+
 	gulp.task('sails-linker-gulp:devJsRelative', function() {
 		// Read templates
 		return gulp.src(['.tmp/public/**/*.html', 'views/**/*.html', 'views/**/*.ejs'])
@@ -45,7 +45,7 @@ module.exports = function(gulp, plugins, growl) {
 				.pipe(gulp.dest('views/'))
 				.pipe(plugins.if(growl, plugins.notify({ message: 'sails-linker-gulp devJsRelative task complete' })));
 	});
-	
+
 	gulp.task('sails-linker-gulp:prodJs', function() {
 		// Read templates
 		return gulp.src(['.tmp/public/**/*.html', 'views/**/*.html', 'views/**/*.ejs'])
@@ -61,7 +61,7 @@ module.exports = function(gulp, plugins, growl) {
 				.pipe(gulp.dest('views/'))
 				.pipe(plugins.if(growl, plugins.notify({ message: 'sails-linker-gulp prodJs task complete' })));
 	});
-	
+
 	gulp.task('sails-linker-gulp:prodJsRelative', function() {
 		// Read templates
 		return gulp.src(['.tmp/public/**/*.html', 'views/**/*.html', 'views/**/*.ejs'])
@@ -78,7 +78,7 @@ module.exports = function(gulp, plugins, growl) {
 				.pipe(gulp.dest('views/'))
 				.pipe(plugins.if(growl, plugins.notify({ message: 'sails-linker-gulp prodJsRelative task complete' })));
 	});
-	
+
 	gulp.task('sails-linker-gulp:devStyles', function() {
 		// Read templates
 		return gulp.src(['.tmp/public/**/*.html', 'views/**/*.html', 'views/**/*.ejs'])
@@ -93,7 +93,7 @@ module.exports = function(gulp, plugins, growl) {
 				.pipe(gulp.dest('views/'))
 				.pipe(plugins.if(growl, plugins.notify({ message: 'sails-linker-gulp devStyles task complete' })));
 	});
-  
+
   	gulp.task('sails-linker-gulp:devStylesRelative', function() {
 		// Read templates
 		return gulp.src(['.tmp/public/**/*.html', 'views/**/*.html', 'views/**/*.ejs'])
@@ -124,7 +124,7 @@ module.exports = function(gulp, plugins, growl) {
 				.pipe(gulp.dest('views/'))
 				.pipe(plugins.if(growl, plugins.notify({ message: 'sails-linker-gulp prodStyles task complete' })));
 	});
-	
+
   	gulp.task('sails-linker-gulp:prodStylesRelative', function() {
 		// Read templates
 		return gulp.src(['.tmp/public/index.html', 'views/**/*.html', 'views/**/*.ejs'])
@@ -140,7 +140,7 @@ module.exports = function(gulp, plugins, growl) {
 				.pipe(gulp.dest('views/'))
 				.pipe(plugins.if(growl, plugins.notify({ message: 'sails-linker-gulp prodStylesRelative task complete' })));
 	});
-	
+
 	gulp.task('sails-linker-gulp:devTpl', function() {
 		// Read templates
 		return gulp.src(['.tmp/public/index.html', 'views/**/*.html', 'views/**/*.ejs'])
